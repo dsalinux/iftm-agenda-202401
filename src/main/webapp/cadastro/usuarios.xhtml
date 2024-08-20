@@ -5,7 +5,8 @@
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 template="/template.xhtml"
                 xmlns:p="primefaces"
-                xmlns:if_agenda="http://xmlns.jcp.org/jsf/composite/if_agenda">
+                xmlns:if_agenda="http://xmlns.jcp.org/jsf/composite/if_agenda"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
 
         
        <h:form>
@@ -20,7 +21,19 @@
              <p:outputLabel value="E-mail"></p:outputLabel>
              <p:inputText value="#{usuarioBean.entidade.email}" disabled="#{usuarioBean.estadoDaTela.name() == 'EDITAR'}"></p:inputText>
              <p:outputLabel value="Senha"></p:outputLabel>
-             <p:inputText value="#{usuarioBean.entidade.senha}"></p:inputText>
+             <p:password value="#{usuarioBean.entidade.novaSenha}"></p:password>
+             <p:outputLabel value="Foto Perfil"></p:outputLabel>
+             <p:fileUpload id="upload" value="#{usuarioBean.file}"
+                      mode="simple" skinSimple="true" auto="true"
+                      process="@this"
+                      listener="#{usuarioBean.handleFileUpload}" />
+             <p:outputLabel value="Permissões"></p:outputLabel>
+             <p:selectCheckboxMenu multiple="true" value="#{usuarioBean.entidade.permissoes}">
+                 <f:attribute name="collectionType" value="java.util.ArrayList" />
+                 <f:selectItems value="#{usuarioBean.permissoes}"
+                                var="permissao" itemLabel="#{permissao.nome}"
+                                itemValue="#{permissao}"></f:selectItems>
+             </p:selectCheckboxMenu>
          </p:panelGrid>
             <p:dataTable value="#{usuarioBean.entidades}" var="usuario" rendered="#{usuarioBean.estadoDaTela.name() == 'LISTAR'}" cellNavigation="false">
                <p:column>
@@ -37,7 +50,7 @@
                    #{usuario.email}
                </p:column>
                <p:column headerText="Permissoes">
-                   #{usuario.permissoes}
+                   #{usuario.permissoesString}
                </p:column>
            </p:dataTable>
        </h:form>

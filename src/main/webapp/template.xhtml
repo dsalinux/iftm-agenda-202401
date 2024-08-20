@@ -47,11 +47,12 @@
                 <li class="user"><a href="#" ><i class="fa-solid fa-user"></i></a>
                     <div class="user-details">
                         <img src="https://i.pravatar.cc/150" alt=""/>
-                        <div class="name">Usuário</div>
-                        <div class="email">usuario@iftm.edu.br</div>
+                        <div class="name">#{usuario.nome}</div>
+                        <div class="email">#{usuario.email}</div>
                         <div class="user-options">
                             <button>Perfil</button>
-                            <button>Sair</button>
+                            <p:button value="Sair" styleClass="btn-error"
+                                      href="#{request.contextPath}/logout.xhtml"></p:button>
                         </div>
                     </div>
                 </li>

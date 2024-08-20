@@ -46,8 +46,25 @@ public class Usuario implements Serializable{
             inverseJoinColumns = @JoinColumn(name = "id_permissao"))
     private List<Permissao> permissoes;
     
+    @Column(name = "foto_perfil")
+    private byte[] fotoPerfil;
+    
     @Transient
     private String novaSenha;
  
-    
+    public String getPermissoesString() {
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < permissoes.size(); i++) {
+            builder.append(permissoes.get(i).getNome());
+            if(i >= 1 && permissoes.size() > 2){
+                builder.append(" e mais...");
+                break;
+            }
+            if(i < permissoes.size()-1){
+                builder.append(", ");
+            }
+        }
+        return builder.toString();
+        
+    }
 }

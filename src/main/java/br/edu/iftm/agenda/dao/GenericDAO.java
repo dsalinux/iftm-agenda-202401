@@ -9,13 +9,14 @@ import java.io.Serializable;
 import java.util.List;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import lombok.Getter;
 
 /**
  *
  * @author danilo
  */
 public abstract class GenericDAO<E, ID> implements Serializable{
-    @Inject
+    @Inject @Getter
     private EntityManager entityManager;
     
     public void salvar(E entidade) {
@@ -36,4 +37,5 @@ public abstract class GenericDAO<E, ID> implements Serializable{
         return entityManager.createQuery("from "+getClasseEntidade().getName()).getResultList();
     }
     public abstract Class<E> getClasseEntidade();   
+    
 }
