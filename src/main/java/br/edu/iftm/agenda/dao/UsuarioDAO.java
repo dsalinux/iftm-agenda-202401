@@ -2,6 +2,7 @@ package br.edu.iftm.agenda.dao;
 
 import br.edu.iftm.agenda.entity.Usuario;
 import java.util.List;
+import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
 public class UsuarioDAO extends GenericDAO<Usuario, Long>{
@@ -23,12 +24,16 @@ public class UsuarioDAO extends GenericDAO<Usuario, Long>{
     public Usuario buscarPorEmail(String email) {
         Query query =  getEntityManager().createQuery("from Usuario where email = :email");
         query.setParameter("email", email);
-        Object retorno = query.getSingleResult();
-        Usuario usuario = null;
-        if(retorno != null) {
-            usuario = (Usuario) retorno;
+        try {
+            Usuario usuario = null;
+            Object retorno = query.getSingleResult();
+            if(retorno != null) {
+                usuario = (Usuario) retorno;
+                return usuario;
+            } 
+        } catch(NoResultException ex) {
+            return null;
         }
-        return usuario;
     }
     
 }
