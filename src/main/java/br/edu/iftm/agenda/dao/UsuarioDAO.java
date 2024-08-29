@@ -32,8 +32,8 @@ public class UsuarioDAO extends GenericDAO<Usuario, Long>{
                 return usuario;
             } 
         } catch(NoResultException ex) {
-            return null;
         }
+        return null;
     }
     
 }

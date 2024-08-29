@@ -5,7 +5,9 @@
 package br.edu.iftm.agenda.dao;
 
 import br.edu.iftm.agenda.entity.Usuario;
+import br.edu.iftm.agenda.util.exception.ErroSistemaException;
 import java.io.Serializable;
+import java.sql.SQLException;
 import java.util.List;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -19,11 +21,14 @@ public abstract class GenericDAO<E, ID> implements Serializable{
     @Inject @Getter
     private EntityManager entityManager;
     
-    public void salvar(E entidade) {
-        
-        entityManager.getTransaction().begin();
-        entityManager.merge(entidade);
-        entityManager.getTransaction().commit();
+    public void salvar(E entidade) throws ErroSistemaException {
+        try {
+            entityManager.getTransaction().begin();
+            entityManager.merge(entidade);
+            entityManager.getTransaction().commit();
+        } catch(IllegalArgumentException | IllegalStateException  ex) {
+            throw new ErroSistemaException("Erro ao salvar no banco.", ex);
+        }
     }
 
     public void deletar(ID id) {

@@ -3,6 +3,8 @@ package br.edu.iftm.agenda.logic;
 import br.edu.iftm.agenda.dao.UsuarioDAO;
 import br.edu.iftm.agenda.entity.Usuario;
 import br.edu.iftm.agenda.util.HashUtil;
+import br.edu.iftm.agenda.util.exception.ErroNegocioException;
+import br.edu.iftm.agenda.util.exception.ErroSistemaException;
 import java.io.Serializable;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -23,7 +25,7 @@ public class UsuarioLogic implements GenericLogic<Usuario> {
     private UsuarioDAO dao;
 
     @Override
-    public void salvar(Usuario entidade) {
+    public void salvar(Usuario entidade) throws ErroSistemaException, ErroNegocioException {
         try {
             if (entidade.getDataCadastro() == null) {
                 entidade.setDataCadastro(new Date());
@@ -36,7 +38,7 @@ public class UsuarioLogic implements GenericLogic<Usuario> {
             }
             dao.salvar(entidade);
         } catch (NoSuchAlgorithmException ex) {
-            Logger.getLogger(UsuarioLogic.class.getName()).log(Level.SEVERE, null, ex);
+            throw new ErroSistemaException("Erro ao criptografar senha.", ex);
         }
     }
 

@@ -1,6 +1,9 @@
 package br.edu.iftm.agenda.bean;
 
 import br.edu.iftm.agenda.logic.GenericLogic;
+import br.edu.iftm.agenda.util.BeanUtil;
+import br.edu.iftm.agenda.util.exception.ErroNegocioException;
+import br.edu.iftm.agenda.util.exception.ErroSistemaException;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
@@ -10,7 +13,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import lombok.Getter;
 
-public abstract class GenericBean<E, L extends GenericLogic<E>> implements Serializable {
+public abstract class GenericBean<E, L extends GenericLogic<E>> extends BeanUtil {
     
     @Getter
     private E entidade;
@@ -35,10 +38,15 @@ public abstract class GenericBean<E, L extends GenericLogic<E>> implements Seria
     };
     
     public void salvar() {
-        getLogic().salvar(entidade);
-        estadoDaTela = EstadoTela.LISTAR;
-        FacesMessage fm = new FacesMessage("Salvo com sucesso!");
-        FacesContext.getCurrentInstance().addMessage(null, fm);
+        try {
+            getLogic().salvar(entidade);
+            estadoDaTela = EstadoTela.LISTAR;
+            addInfo("Salvo com sucesso");
+        } catch (ErroSistemaException ex) {
+            addErro(ex);
+        } catch (ErroNegocioException ex) {
+            addAviso(ex);
+        }
     }
     public void editar(E entidade){
         this.entidade = entidade;
