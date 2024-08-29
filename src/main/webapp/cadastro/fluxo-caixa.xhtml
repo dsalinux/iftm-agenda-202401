@@ -1,0 +1,55 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="/template.xhtml"
+                xmlns:p="primefaces"
+                xmlns:if_agenda="http://xmlns.jcp.org/jsf/composite/if_agenda"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+        
+       <h:form>
+            <h1>Cadastro Fluxo de Caixa</h1>
+
+            <if_agenda:toolbarCrud crud="#{fluxoCaixaBean}"></if_agenda:toolbarCrud>
+           <p:panelGrid columns="2" layout="tabular" rendered="#{fluxoCaixaBean.estadoDaTela.name() != 'LISTAR'}">
+               
+             <p:outputLabel value="Tipo Movimento"></p:outputLabel>
+             <p:selectOneRadio value="#{fluxoCaixaBean.entidade.tipoMovimento}">
+                 <f:selectItem itemLabel="Entrada" itemValue="entrada"></f:selectItem>
+                 <f:selectItem itemLabel="Saída" itemValue="saida"></f:selectItem>
+             </p:selectOneRadio>
+             <p:outputLabel value="Descrição"></p:outputLabel>
+             <p:inputText value="#{fluxoCaixaBean.entidade.descricao}"></p:inputText>
+             <p:outputLabel value="Valor"></p:outputLabel>
+             <p:inputText value="#{fluxoCaixaBean.entidade.valor}"></p:inputText>
+         </p:panelGrid>
+            <p:dataTable value="#{fluxoCaixaBean.entidades}" var="fluxo" rendered="#{fluxoCaixaBean.estadoDaTela.name() == 'LISTAR'}" cellNavigation="false">
+               <p:column>
+                   <p:commandButton icon="pi pi-pencil" title="Editar" actionListener="#{fluxoCaixaBean.editar(fluxo)}" update="@form">
+                   </p:commandButton>
+                   <p:commandButton icon="pi pi-trash" title="Deletar" actionListener="#{fluxoCaixaBean.deletar(fluxo)}" update="@form">
+                       <p:confirm type="popup" header="Confirmation"  message="Tem certeza que vai deletar?"></p:confirm>
+                   </p:commandButton>
+               </p:column>
+               
+               <p:column headerText="Descrição">
+                   #{fluxo.descricao}
+               </p:column>
+               <p:column headerText="Valor">
+                   <h:outputText value="#{fluxo.valor}" style="color: #{fluxo.tipoMovimento == 'entrada'?'green':'red'}">
+                       <f:convertNumber currencySymbol="R$" maxFractionDigits="2" type="currency"></f:convertNumber>
+                   </h:outputText>
+               </p:column>
+                <p:column headerText="Descrição">
+                    <h:outputText value="#{fluxo.dataCadastro}">
+                        <f:convertDateTime pattern="dd/MM/yyyy hh:mm"></f:convertDateTime>
+                    </h:outputText>
+                   
+               </p:column>
+           </p:dataTable>
+       </h:form>
+        
+
+</ui:composition>
