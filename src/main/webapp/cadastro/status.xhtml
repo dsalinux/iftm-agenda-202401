@@ -1,0 +1,56 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="/template.xhtml"
+                xmlns:p="primefaces"
+                xmlns:if_agenda="http://xmlns.jcp.org/jsf/composite/if_agenda"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+        
+       <h:form>
+            <h1>Cadastro Status</h1>
+
+            <if_agenda:toolbarCrud crud="#{statusBean}"></if_agenda:toolbarCrud>
+           <p:panelGrid columns="2" layout="tabular" rendered="#{statusBean.estadoDaTela.name() != 'LISTAR'}">
+             <p:outputLabel value="Nome"></p:outputLabel>
+             <p:inputText value="#{statusBean.entidade.nome}"></p:inputText>
+             <p:outputLabel value="Status"></p:outputLabel>
+             <p:colorPicker value="#{statusBean.entidade.cor}" closeButton="true" alpha="false"></p:colorPicker>
+             <p:outputLabel value="Icone"></p:outputLabel>
+              <h:panelGroup styleClass="ui-inputgroup">
+                    <h:panelGroup id="icon" styleClass="ui-inputgroup-addon">
+                        <i class="fas fa-#{statusBean.entidade.icone}"/>
+                    </h:panelGroup>
+                  <p:selectOneMenu id="selectOneMenuIcon" value="#{statusBean.entidade.icone}" var="item" editable="true">
+                        <f:selectItems value="#{['flag-checkered','calendar-check','cash-register','cart-shopping','circle-pause','play', 'forward']}" var="item" itemLabel="#{item}"
+                           itemValue="#{item}" />
+                       <p:column><i class="fas fa-#{item}" /> #{item} </p:column>
+
+                       <p:ajax update="@parent:@parent:icon" process="@parent" />
+                   </p:selectOneMenu>
+              </h:panelGroup>
+             
+         </p:panelGrid>
+            <p:dataTable value="#{statusBean.entidades}" var="status" rendered="#{statusBean.estadoDaTela.name() == 'LISTAR'}" cellNavigation="false">
+               <p:column>
+                   <p:commandButton icon="pi pi-pencil" title="Editar" actionListener="#{statusBean.editar(status)}" update="@form">
+                   </p:commandButton>
+                   <p:commandButton icon="pi pi-trash" title="Deletar" actionListener="#{statusBean.deletar(status)}" update="@form">
+                       <p:confirm type="popup" header="Confirmation"  message="Tem certeza que vai deletar?"></p:confirm>
+                   </p:commandButton>
+               </p:column>
+               <p:column headerText="Nome">
+                   #{status.nome}
+               </p:column>
+               <p:column headerText="Estilo">
+                   <h:panelGroup style="width: 30px; height: 30px; background: #{status.cor}; display: flex; align-items: center; justify-content: center; color: white;">
+                       <i class="fas fa-#{status.icone}"></i>
+                   </h:panelGroup>
+               </p:column>
+           </p:dataTable>
+       </h:form>
+        
+
+</ui:composition>

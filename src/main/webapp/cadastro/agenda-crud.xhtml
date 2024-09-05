@@ -1,0 +1,67 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="/template.xhtml"
+                xmlns:p="primefaces"
+                xmlns:if_agenda="http://xmlns.jcp.org/jsf/composite/if_agenda"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+        
+       <h:form>
+            <h1>Agenda CRUD</h1>
+
+            <if_agenda:toolbarCrud crud="#{agendaBean}"></if_agenda:toolbarCrud>
+           <p:panelGrid columns="2" layout="tabular" rendered="#{agendaBean.estadoDaTela.name() != 'LISTAR'}">
+               
+             <p:outputLabel value="Descrição"></p:outputLabel>
+             <p:inputText value="#{agendaBean.entidade.descricao}"></p:inputText>
+             <p:outputLabel value="Data Inicio"></p:outputLabel>
+             <p:datePicker value="#{agendaBean.entidade.dataAgendamentoInicio}" showTime="true" stepMinute="5">
+                 <p:ajax event="change" listener="#{agendaBean.selecionarData}" process="dataAgendaFim, @this" update="dataAgendaFim"></p:ajax>
+             </p:datePicker>
+             <p:outputLabel value="Data Fim"></p:outputLabel>
+             <p:datePicker value="#{agendaBean.entidade.dataAgendamentoFim}" showTime="true" id="dataAgendaFim" stepMinute="5"></p:datePicker>
+             <p:outputLabel value="Status"></p:outputLabel>
+             <p:selectOneMenu value="#{agendaBean.entidade.status}" var="status" converter="statusConverter">
+                 <f:selectItems value="#{agendaBean.status}" var="status" itemLabel="#{status.nome}" itemValue="#{status}"></f:selectItems>
+                 <p:column>
+                     <h:panelGroup style="border-left: 4px solid #{status.cor}; height: 30px; display: block; padding-left: 10px;">
+                        <i class="fas fa-#{status.icone}" /> #{status.nome} 
+                     </h:panelGroup>
+                 </p:column>
+             </p:selectOneMenu>
+         </p:panelGrid>
+            <p:dataTable value="#{agendaBean.entidades}" var="fluxo" rendered="#{agendaBean.estadoDaTela.name() == 'LISTAR'}" cellNavigation="false">
+               <p:column>
+                   <p:commandButton icon="pi pi-pencil" title="Editar" actionListener="#{agendaBean.editar(fluxo)}" update="@form">
+                   </p:commandButton>
+                   <p:commandButton icon="pi pi-trash" title="Deletar" actionListener="#{agendaBean.deletar(fluxo)}" update="@form">
+                       <p:confirm type="popup" header="Confirmation"  message="Tem certeza que vai deletar?"></p:confirm>
+                   </p:commandButton>
+               </p:column>
+               
+               <p:column headerText="Descrição">
+                   #{fluxo.descricao}
+               </p:column>
+               
+                <p:column headerText="Agenda">
+                    <h:outputText value="#{fluxo.dataAgendamentoInicio}">
+                        <f:convertDateTime pattern="dd/MM/yyyy hh:mm"></f:convertDateTime>
+                    </h:outputText>
+                    <h:outputText value=" até "></h:outputText>
+                    <h:outputText value="#{fluxo.dataAgendamentoFim}">
+                        <f:convertDateTime pattern="dd/MM/yyyy hh:mm"></f:convertDateTime>
+                    </h:outputText>
+               </p:column>
+                <p:column headerText="Status">
+                    <h:panelGroup style="background-color: #{fluxo.status.cor}; padding: 5px 8px; border-radius: 8px;">
+                        <i class="fas fa-#{fluxo.status.icone}"></i>#{fluxo.status.nome}
+                    </h:panelGroup>
+               </p:column>
+           </p:dataTable>
+       </h:form>
+        
+
+</ui:composition>

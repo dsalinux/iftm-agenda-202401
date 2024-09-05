@@ -38,11 +38,15 @@
                    #{fluxo.descricao}
                </p:column>
                <p:column headerText="Valor">
-                   <h:outputText value="#{fluxo.valor}" style="color: #{fluxo.tipoMovimento == 'entrada'?'green':'red'}">
-                       <f:convertNumber currencySymbol="R$" maxFractionDigits="2" type="currency"></f:convertNumber>
-                   </h:outputText>
+                   <h:panelGroup style="color: #{fluxo.tipoMovimento == 'entrada'?'green':'red'}; font-weight: bold">
+                        <i class="pi #{fluxo.tipoMovimento == 'entrada'?'pi-download':'pi-upload'}"></i>
+                        <p:spacer width="10px"></p:spacer>
+                        <h:outputText value="#{fluxo.valor}">
+                            <f:convertNumber currencySymbol="R$" maxFractionDigits="2" type="currency"></f:convertNumber>
+                        </h:outputText>
+                   </h:panelGroup>
                </p:column>
-                <p:column headerText="Descrição">
+                <p:column headerText="Data Movimento">
                     <h:outputText value="#{fluxo.dataCadastro}">
                         <f:convertDateTime pattern="dd/MM/yyyy hh:mm"></f:convertDateTime>
                     </h:outputText>
